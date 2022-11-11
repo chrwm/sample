@@ -21,7 +21,7 @@
         },
         "path": {
             "@id": "dct:identifier",
-            "@type": "@id"
+            "@type": "xsd:string"
         },
         "comment": {
             "@id": "rdfs:comment",
