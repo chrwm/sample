@@ -1,0 +1,77 @@
+# Query show all ontological annotations
+
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dataid: <http://dataid.dbpedia.org/ns/core#>
+PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX dcat:   <http://www.w3.org/ns/dcat#>
+PREFIX db:     <https://databus.dbpedia.org/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX csvw: <http://www.w3.org/ns/csvw#>
+PREFIX oeo: <http://openenergy-platform.org/ontology/oeo/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX purl: <http://purl.org/goodrelations/v1#>
+
+
+# SELECT DISTINCT - choose what information to print
+# WHERE {} - access oemetadata dict by calling the RDF-equivalents from context.json. Works similar to python dict access. See further inline comments.
+# Query terms have the OEMetadata-naming to ease query readability.
+
+SELECT DISTINCT ?resources_name ?subject ?fields_name ?fields_description ?isAbout ?valueReference_name ?valueReference_path WHERE { # 1st line; every item in this line will be printed as result column
+  ?find_resources_dicts_in_all_metadata csvw:table/rdfs:label ?resources_name . # find find_resources_dicts_in_all_metadata is placeholder, is empty could be x or banana; print resources_name(s)
+  # same as
+  # ?find_resources_dicts_in_all_metadata csvw:table ?resources . # find resources as nodes, don't print them.
+  # ?resources rdfs:label ?resources_name . # find resource names in resourece and print instead
+
+  ?find_schema_dict_in_resources csvw:table/csvw:tableSchema ?schema . # save schema-dict-infos in schema variable and access subkeys in further queries
+  ?schema csvw:column ?fields . # find fields in schema; use fields for further queries
+  ?fields rdfs:label ?fields_name . # print column names, see 1st line
+  ?fields dct:description ?fields_description . # print column description, see 1st line
+  # If annotations were made in OEMetada print them
+  OPTIONAL{?x dc:subject/rdfs:label ?subject .}
+  OPTIONAL{?fields saref:isAbout ?isAbout .}
+  OPTIONAL{?fields saref:isAbout ?isAbout .}
+  OPTIONAL{?fields purl:valueReference ?valueReference_path .}
+  OPTIONAL{?valueReference_path rdfs:label ?valueReference_name .}
+}
+
+
+# Query 2 show resource_path
+
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX dataid: <http://dataid.dbpedia.org/ns/core#>
+PREFIX dct:    <http://purl.org/dc/terms/>
+PREFIX dcat:   <http://www.w3.org/ns/dcat#>
+PREFIX db:     <https://databus.dbpedia.org/>
+PREFIX rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX csvw: <http://www.w3.org/ns/csvw#>
+PREFIX oeo: <http://openenergy-platform.org/ontology/oeo/>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX saref: <https://saref.etsi.org/core/>
+PREFIX purl: <http://purl.org/goodrelations/v1#>
+
+
+# SELECT DISTINCT - choose what information to print
+# WHERE {} - access oemetadata dict by calling the RDF-equivalents from context.json. Works similar to python dict access. See further inline comments.
+# Query terms have the OEMetadata-naming to ease query readability.
+
+SELECT DISTINCT ?resources_path ?resources_name ?subject ?fields_name ?fields_description ?isAbout ?valueReference_name ?valueReference_path WHERE { # 1st line; every item in this line will be printed as result column
+
+  ?find_resources_dicts_in_all_metadata csvw:table/rdfs:label ?resources_name . # find find_resources_dicts_in_all_metadata is placeholder, is empty could be x or banana; print resources_name(s)
+  # same as
+  # ?find_resources_dicts_in_all_metadata csvw:table ?resources . # find resources as nodes, don't print them.
+  # ?resources rdfs:label ?resources_name . # find resource names in resourece and print instead
+
+  ?find_schema_dict_in_resources csvw:table/csvw:tableSchema ?schema . # save schema-dict-infos in schema variable and access subkeys in further queries
+  ?schema csvw:column ?fields . # find fields in schema; use fields for further queries
+  ?fields rdfs:label ?fields_name . # print column names, see 1st line
+  ?fields dct:description ?fields_description . # print column description, see 1st line
+  # If annotations were made in OEMetada print them
+  OPTIONAL{?x dc:subject/rdfs:label ?subject .}
+  OPTIONAL{?find_path_to_oep csvw:table/dct:identifier ?resources_path .}
+
+}
